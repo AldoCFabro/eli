@@ -11,7 +11,7 @@ import { zodErrorState, type FormState } from "@/lib/action-state";
 function readScheduleFormData(formData: FormData, activityId: string) {
   return {
     activityId,
-    teacherId: formData.get("teacherId") ?? "",
+    instructorId: formData.get("instructorId") ?? "",
     title: formData.get("title") ?? "",
     daysOfWeek: formData.getAll("daysOfWeek"),
     startTime: formData.get("startTime"),
@@ -33,7 +33,7 @@ export async function createScheduleAction(
   await connectDB();
   await Schedule.create({
     ...parsed.data,
-    teacherId: parsed.data.teacherId || null,
+    instructorId: parsed.data.instructorId || null,
     businessId: session.businessId,
   });
 
@@ -54,7 +54,7 @@ export async function updateScheduleAction(
   await connectDB();
   const updated = await Schedule.findOneAndUpdate(
     { _id: scheduleId, businessId: session.businessId },
-    { ...parsed.data, teacherId: parsed.data.teacherId || null }
+    { ...parsed.data, instructorId: parsed.data.instructorId || null }
   );
   if (!updated) return { error: "No encontramos ese horario." };
 

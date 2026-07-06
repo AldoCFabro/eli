@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { requireOnboardedSession } from "@/lib/auth/guard";
 import { connectDB } from "@/lib/db/connect";
-import { Activity, Schedule, Student, Teacher } from "@/models";
+import { Activity, Instructor, Schedule, Student } from "@/models";
 import { Card } from "@/components/ui/Card";
-import { ActivityIcon, ClockIcon, StudentsIcon, TeacherIcon } from "@/components/ui/icons";
+import { ActivityIcon, ClockIcon, InstructorIcon, StudentsIcon } from "@/components/ui/icons";
 import { DAY_LABELS } from "@/lib/labels";
 import type { DayOfWeek } from "@/types";
 
@@ -24,20 +24,20 @@ export default async function DashboardPage() {
   const businessId = business._id;
   const today = WEEKDAY_INDEX[new Date().getDay()];
 
-  const [studentCount, teacherCount, activityCount, todaySchedules] = await Promise.all([
+  const [studentCount, instructorCount, activityCount, todaySchedules] = await Promise.all([
     Student.countDocuments({ businessId, status: "active" }),
-    Teacher.countDocuments({ businessId, status: "active" }),
+    Instructor.countDocuments({ businessId, status: "active" }),
     Activity.countDocuments({ businessId, status: "active" }),
     Schedule.find({ businessId, status: "active", daysOfWeek: today })
       .sort({ startTime: 1 })
       .populate("activityId", "name")
-      .populate("teacherId", "firstName lastName")
+      .populate("instructorId", "firstName lastName")
       .lean(),
   ]);
 
   const stats = [
     { label: "Alumnos activos", value: studentCount, href: "/students", icon: StudentsIcon, tint: "bg-indigo-50 text-indigo-600" },
-    { label: "Profesores activos", value: teacherCount, href: "/teachers", icon: TeacherIcon, tint: "bg-teal-50 text-teal-600" },
+    { label: "Instructores activos", value: instructorCount, href: "/instructors", icon: InstructorIcon, tint: "bg-teal-50 text-teal-600" },
     { label: "Disciplinas", value: activityCount, href: "/activities", icon: ActivityIcon, tint: "bg-amber-50 text-amber-600" },
   ];
 
@@ -78,7 +78,7 @@ export default async function DashboardPage() {
           <div className="flex flex-col gap-2">
             {todaySchedules.map((schedule) => {
               const activityDoc = schedule.activityId as unknown as { name?: string } | null;
-              const teacherDoc = schedule.teacherId as unknown as
+              const instructorDoc = schedule.instructorId as unknown as
                 | { firstName?: string; lastName?: string }
                 | null;
               return (
@@ -87,9 +87,9 @@ export default async function DashboardPage() {
                     <p className="text-sm font-medium text-slate-900">
                       {schedule.title || activityDoc?.name || "Actividad"}
                     </p>
-                    {teacherDoc && (
+                    {instructorDoc && (
                       <p className="text-xs text-slate-500">
-                        {teacherDoc.firstName} {teacherDoc.lastName}
+                        {instructorDoc.firstName} {instructorDoc.lastName}
                       </p>
                     )}
                   </div>

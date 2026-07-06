@@ -9,7 +9,7 @@ import { DAY_LABELS_SHORT } from "@/lib/labels";
 import { DAYS_OF_WEEK } from "@/types";
 
 type ScheduleFormTextValues = {
-  teacherId?: string;
+  instructorId?: string;
   title?: string;
   startTime?: string;
   endTime?: string;
@@ -22,12 +22,12 @@ type ScheduleFormValues = ScheduleFormTextValues & {
 
 export function ScheduleForm({
   action,
-  teachers,
+  instructors,
   defaultValues,
   submitLabel,
 }: {
   action: (prevState: FormState, formData: FormData) => Promise<FormState>;
-  teachers: { _id: unknown; firstName: string; lastName: string }[];
+  instructors: { _id: unknown; firstName: string; lastName: string }[];
   defaultValues?: ScheduleFormValues;
   submitLabel: string;
 }) {
@@ -44,12 +44,12 @@ export function ScheduleForm({
         <Input id="title" name="title" placeholder="Ej: Turno tarde" defaultValue={v("title")} />
       </Field>
 
-      <Field label="Profesor" htmlFor="teacherId" error={fieldError(state, "teacherId")}>
-        <Select key={resetKey} id="teacherId" name="teacherId" defaultValue={v("teacherId")}>
+      <Field label="Instructor" htmlFor="instructorId" error={fieldError(state, "instructorId")}>
+        <Select key={resetKey} id="instructorId" name="instructorId" defaultValue={v("instructorId")}>
           <option value="">Sin asignar</option>
-          {teachers.map((teacher) => (
-            <option key={String(teacher._id)} value={String(teacher._id)}>
-              {teacher.firstName} {teacher.lastName}
+          {instructors.map((instructor) => (
+            <option key={String(instructor._id)} value={String(instructor._id)}>
+              {instructor.firstName} {instructor.lastName}
             </option>
           ))}
         </Select>

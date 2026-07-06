@@ -10,10 +10,11 @@ import { useDirtyForm } from "@/lib/use-dirty-form";
 import { SEX_LABELS } from "@/lib/labels";
 import { DOCUMENT_TYPES, SEX_VALUES } from "@/types";
 
-type TeacherFormValues = {
+type InstructorFormValues = {
   firstName: string;
   lastName: string;
   birthDate: string;
+  position: string;
   documentType: string;
   documentNumber: string;
   phone: string;
@@ -22,10 +23,11 @@ type TeacherFormValues = {
   notes: string;
 };
 
-const EMPTY_VALUES: TeacherFormValues = {
+const EMPTY_VALUES: InstructorFormValues = {
   firstName: "",
   lastName: "",
   birthDate: "",
+  position: "",
   documentType: "DNI",
   documentNumber: "",
   phone: "",
@@ -34,13 +36,13 @@ const EMPTY_VALUES: TeacherFormValues = {
   notes: "",
 };
 
-export function TeacherForm({
+export function InstructorForm({
   action,
   initialValues,
   submitLabel,
 }: {
   action: (prevState: FormState, formData: FormData) => Promise<FormState>;
-  initialValues?: Partial<TeacherFormValues>;
+  initialValues?: Partial<InstructorFormValues>;
   submitLabel: string;
 }) {
   const [state, formAction, pending] = useActionState(action, initialFormState);
@@ -86,6 +88,15 @@ export function TeacherForm({
           value={values.birthDate}
           onChange={(e) => setField("birthDate", e.target.value)}
           required
+        />
+      </Field>
+
+      <Field label="Puesto" htmlFor="position" error={fieldError(state, "position")} hint='Ej: "Instructora de Ritmos".'>
+        <Input
+          id="position"
+          name="position"
+          value={values.position}
+          onChange={(e) => setField("position", e.target.value)}
         />
       </Field>
 

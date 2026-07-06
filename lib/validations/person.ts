@@ -10,7 +10,7 @@ const isMinor = (birthDate: Date) => {
   return exactAge < 18;
 };
 
-export const teacherSchema = z.object({
+const basePersonSchema = z.object({
   firstName: z.string().min(1, { error: "El nombre es obligatorio." }).trim(),
   lastName: z.string().min(1, { error: "El apellido es obligatorio." }).trim(),
   birthDate: z.coerce.date({ error: "La fecha de nacimiento es obligatoria." }),
@@ -23,7 +23,11 @@ export const teacherSchema = z.object({
   notes: z.string().optional().default(""),
 });
 
-export const studentSchema = teacherSchema
+export const instructorSchema = basePersonSchema.extend({
+  position: z.string().optional().default(""),
+});
+
+export const studentSchema = basePersonSchema
   .extend({
     responsibleContactName: z.string().optional().default(""),
     responsibleContactPhone: z.string().optional().default(""),
@@ -38,5 +42,5 @@ export const studentSchema = teacherSchema
     }
   });
 
-export type TeacherInput = z.infer<typeof teacherSchema>;
+export type InstructorInput = z.infer<typeof instructorSchema>;
 export type StudentInput = z.infer<typeof studentSchema>;

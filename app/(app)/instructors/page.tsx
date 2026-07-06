@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requireSession } from "@/lib/auth/guard";
 import { connectDB } from "@/lib/db/connect";
-import { Teacher } from "@/models";
+import { Instructor } from "@/models";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
@@ -11,7 +11,7 @@ import { SearchBar } from "@/components/forms/SearchBar";
 import { PlusIcon } from "@/components/ui/icons";
 import type { StatusValue } from "@/types";
 
-export default async function TeachersPage({
+export default async function InstructorsPage({
   searchParams,
 }: {
   searchParams: Promise<{ q?: string }>;
@@ -26,13 +26,13 @@ export default async function TeachersPage({
     filter.$or = [{ firstName: regex }, { lastName: regex }];
   }
 
-  const teachers = await Teacher.find(filter).sort({ lastName: 1, firstName: 1 }).lean();
+  const instructors = await Instructor.find(filter).sort({ lastName: 1, firstName: 1 }).lean();
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-slate-900">Profesores</h1>
-        <Link href="/teachers/new">
+        <h1 className="text-xl font-semibold text-slate-900">Instructores</h1>
+        <Link href="/instructors/new">
           <Button size="sm">
             <PlusIcon className="h-4 w-4" /> Nuevo
           </Button>
@@ -41,31 +41,31 @@ export default async function TeachersPage({
 
       <SearchBar placeholder="Buscar por nombre o apellido..." />
 
-      {teachers.length === 0 ? (
+      {instructors.length === 0 ? (
         <EmptyState
-          title={q ? "No encontramos profesores" : "Todavía no cargaste profesores"}
-          description={q ? "Probá con otro nombre." : "Creá tu primer profesor para empezar."}
+          title={q ? "No encontramos instructores" : "Todavía no cargaste instructores"}
+          description={q ? "Probá con otro nombre." : "Creá tu primer instructor para empezar."}
           action={
             !q && (
-              <Link href="/teachers/new">
-                <Button size="sm">Crear profesor</Button>
+              <Link href="/instructors/new">
+                <Button size="sm">Crear instructor</Button>
               </Link>
             )
           }
         />
       ) : (
         <div className="flex flex-col gap-2">
-          {teachers.map((teacher) => (
-            <Link key={String(teacher._id)} href={`/teachers/${teacher._id}`}>
+          {instructors.map((instructor) => (
+            <Link key={String(instructor._id)} href={`/instructors/${instructor._id}`}>
               <Card className="flex items-center gap-3 transition hover:border-[var(--brand-primary)] hover:shadow-md">
-                <Avatar name={`${teacher.firstName} ${teacher.lastName}`} />
+                <Avatar name={`${instructor.firstName} ${instructor.lastName}`} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-slate-900">
-                    {teacher.firstName} {teacher.lastName}
+                    {instructor.firstName} {instructor.lastName}
                   </p>
-                  <p className="text-xs text-slate-500">{teacher.phone || "Sin teléfono"}</p>
+                  <p className="text-xs text-slate-500">{instructor.phone || "Sin teléfono"}</p>
                 </div>
-                <Badge status={teacher.status as StatusValue} />
+                <Badge status={instructor.status as StatusValue} />
               </Card>
             </Link>
           ))}

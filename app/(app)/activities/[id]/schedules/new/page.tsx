@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireSession } from "@/lib/auth/guard";
 import { connectDB } from "@/lib/db/connect";
-import { Activity, Teacher } from "@/models";
+import { Activity, Instructor } from "@/models";
 import { createScheduleAction } from "@/app/(app)/activities/[id]/schedules/actions";
 import { ScheduleForm } from "@/components/forms/ScheduleForm";
 import { ArrowLeftIcon } from "@/components/ui/icons";
@@ -15,7 +15,7 @@ export default async function NewSchedulePage({ params }: { params: Promise<{ id
   const activity = await Activity.findOne({ _id: id, businessId: session.businessId }).lean();
   if (!activity) notFound();
 
-  const teachers = await Teacher.find({ businessId: session.businessId, status: "active" })
+  const instructors = await Instructor.find({ businessId: session.businessId, status: "active" })
     .sort({ lastName: 1 })
     .lean();
 
@@ -27,7 +27,7 @@ export default async function NewSchedulePage({ params }: { params: Promise<{ id
         <ArrowLeftIcon className="h-4 w-4" /> {activity.name}
       </Link>
       <h1 className="text-xl font-semibold text-slate-900">Nuevo horario</h1>
-      <ScheduleForm action={boundCreate} teachers={teachers} submitLabel="Crear horario" />
+      <ScheduleForm action={boundCreate} instructors={instructors} submitLabel="Crear horario" />
     </div>
   );
 }

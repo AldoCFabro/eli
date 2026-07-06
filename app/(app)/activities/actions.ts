@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireSession } from "@/lib/auth/guard";
 import { connectDB } from "@/lib/db/connect";
-import { Activity, Enrollment, TeacherActivity } from "@/models";
+import { Activity, Enrollment, InstructorActivity } from "@/models";
 import { activitySchema } from "@/lib/validations/activity";
 import { zodErrorState, type FormState } from "@/lib/action-state";
 import type { StatusValue } from "@/types";
@@ -85,24 +85,24 @@ export async function setActivityStudentsAction(activityId: string, formData: Fo
   revalidatePath(`/activities/${activityId}`);
 }
 
-export async function setActivityTeachersAction(activityId: string, formData: FormData) {
+export async function setActivityInstructorsAction(activityId: string, formData: FormData) {
   const session = await requireSession();
   await connectDB();
 
   const activity = await Activity.findOne({ _id: activityId, businessId: session.businessId }).lean();
   if (!activity) return;
 
-  const selectedTeacherIds = formData.getAll("teacherIds").map(String);
+  const selectedInstructorIds = formData.getAll("instructorIds").map(String);
 
-  await TeacherActivity.deleteMany({
+  await InstructorActivity.deleteMany({
     businessId: session.businessId,
     activityId,
-    teacherId: { $nin: selectedTeacherIds },
+    instructorId: { $nin: selectedInstructorIds },
   });
 
-  for (const teacherId of selectedTeacherIds) {
-    await TeacherActivity.findOneAndUpdate(
-      { businessId: session.businessId, activityId, teacherId },
+  for (const instructorId of selectedInstructorIds) {
+    await InstructorActivity.findOneAndUpdate(
+      { businessId: session.businessId, activityId, instructorId },
       {},
       { upsert: true }
     );

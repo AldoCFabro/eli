@@ -41,7 +41,6 @@ export async function registerAction(_prevState: FormState, formData: FormData):
   const business = await Business.create({
     name: "Mi negocio",
     type: "otro",
-    activityLabel: "actividades",
     onboardingCompleted: false,
   });
 

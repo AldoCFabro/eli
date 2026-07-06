@@ -5,7 +5,7 @@ const scheduleSchema = new Schema(
   {
     businessId: { type: Schema.Types.ObjectId, ref: "Business", required: true, index: true },
     activityId: { type: Schema.Types.ObjectId, ref: "Activity", required: true, index: true },
-    teacherId: { type: Schema.Types.ObjectId, ref: "Teacher", default: null },
+    instructorId: { type: Schema.Types.ObjectId, ref: "Instructor", default: null },
     title: { type: String, default: "" },
     daysOfWeek: { type: [String], enum: DAYS_OF_WEEK, required: true },
     startTime: { type: String, required: true },

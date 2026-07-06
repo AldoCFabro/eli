@@ -30,7 +30,7 @@ export function ActivityIcon({ className = base }: IconProps) {
   );
 }
 
-export function TeacherIcon({ className = base }: IconProps) {
+export function InstructorIcon({ className = base }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className={className}>
       <circle cx="12" cy="7.5" r="3.5" />

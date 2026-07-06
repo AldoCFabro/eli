@@ -6,7 +6,7 @@ const timePattern = /^([01]\d|2[0-3]):([0-5]\d)$/;
 export const scheduleSchema = z
   .object({
     activityId: z.string().min(1, { error: "Elegí una actividad." }),
-    teacherId: z.string().optional().default(""),
+    instructorId: z.string().optional().default(""),
     title: z.string().optional().default(""),
     daysOfWeek: z
       .array(z.enum(DAYS_OF_WEEK))

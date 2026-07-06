@@ -8,7 +8,7 @@
 import { existsSync } from "node:fs";
 import { connectDB } from "../lib/db/connect";
 import { hashPassword } from "../lib/auth/password";
-import { Activity, Business, Enrollment, Student, Teacher, TeacherActivity, User } from "../models";
+import { Activity, Business, Enrollment, Instructor, InstructorActivity, Student, User } from "../models";
 
 const OWNER_EMAIL = "aldocfabro@gmail.com";
 const OWNER_PASSWORD = "EpEstudio2026!";
@@ -79,15 +79,15 @@ async function seed() {
     Business.deleteMany({}),
     User.deleteMany({}),
     Student.deleteMany({}),
-    Teacher.deleteMany({}),
+    Instructor.deleteMany({}),
     Activity.deleteMany({}),
     Enrollment.deleteMany({}),
-    TeacherActivity.deleteMany({}),
+    InstructorActivity.deleteMany({}),
   ]);
 
   console.log("Creando negocio y usuario...");
   const business = await Business.create({
-    name: "EP Estudio",
+    name: "EP Estudio de Baile",
     type: "academia",
     phone: "3417701010",
     address: "Roldán",
@@ -101,17 +101,18 @@ async function seed() {
     role: "owner",
   });
 
-  console.log("Creando profesora...");
-  const eliana = await Teacher.create({
+  console.log("Creando instructora...");
+  const eliana = await Instructor.create({
     businessId: business._id,
     firstName: "Eliana",
     lastName: "Pellegrini",
     birthDate: new Date("1990-01-01"),
+    position: "Instructora de Ritmos",
     documentType: "CUIL",
     documentNumber: "",
     sex: "femenino",
     status: "active",
-    notes: "Directora de EP Estudio — completar fecha de nacimiento y CUIL reales.",
+    notes: "En EP Estudio de Baile desde el 30/06/2022 — completar fecha de nacimiento y CUIL reales.",
   });
 
   console.log("Creando disciplinas...");
@@ -119,7 +120,7 @@ async function seed() {
   for (const name of ["Compe Pekes", "Compe Reggeton", "Compe Brasilero"]) {
     const activity = await Activity.create({ businessId: business._id, name, status: "active" });
     activityByName.set(name, activity);
-    await TeacherActivity.create({ businessId: business._id, teacherId: eliana._id, activityId: activity._id });
+    await InstructorActivity.create({ businessId: business._id, instructorId: eliana._id, activityId: activity._id });
   }
 
   console.log("Creando alumnas/os...");
@@ -183,7 +184,7 @@ async function seed() {
     }
   }
 
-  console.log(`\nListo. ${rawStudents.length} alumnas/os, 1 profesora, 3 disciplinas.`);
+  console.log(`\nListo. ${rawStudents.length} alumnas/os, 1 instructora, 3 disciplinas.`);
   console.log(`Login: ${OWNER_EMAIL} / ${OWNER_PASSWORD}`);
   process.exit(0);
 }

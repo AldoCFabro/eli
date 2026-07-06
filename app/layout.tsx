@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Eli — Gestión de alumnos, profesores y horarios",
-  description: "Administrá alumnos, profesores, actividades y horarios de tu academia, club o gimnasio.",
+  title: "Eli — Gestión de alumnos, instructores y horarios",
+  description: "Administrá alumnos, instructores, actividades y horarios de tu academia, club o gimnasio.",
 };
 
 export const viewport = {

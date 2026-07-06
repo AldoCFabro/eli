@@ -1,8 +1,8 @@
 export { Business } from "./Business";
 export { User } from "./User";
 export { Student } from "./Student";
-export { Teacher } from "./Teacher";
+export { Instructor } from "./Instructor";
 export { Activity } from "./Activity";
 export { Enrollment } from "./Enrollment";
-export { TeacherActivity } from "./TeacherActivity";
+export { InstructorActivity } from "./InstructorActivity";
 export { Schedule } from "./Schedule";

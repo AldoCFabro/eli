@@ -1,6 +1,6 @@
 # Eli
 
-MVP para gestionar alumnos, profesores, actividades y horarios de una academia, club, gimnasio o
+MVP para gestionar alumnos, instructores, actividades y horarios de una academia, club, gimnasio o
 taller. Multi-negocio: cada cuenta administra los datos de un único negocio, sin cruces entre
 cuentas distintas.
 
@@ -51,7 +51,7 @@ pnpm seed
 
 Borra todo lo que haya en la base configurada en `MONGODB_URI` y la recarga con un dataset real
 de ejemplo: el negocio "EP Estudio", la cuenta `aldocfabro@gmail.com` (contraseña `EpEstudio2026!`),
-la profesora Eliana Pellegrini, 3 disciplinas (Compe Pekes, Compe Reggeton, Compe Brasilero) y 28
+la instructora Eliana Pellegrini, 3 disciplinas (Compe Pekes, Compe Reggeton, Compe Brasilero) y 28
 alumnas/os con sus datos reales de documento y fecha de nacimiento. Pensado para desarrollo local:
 correlo las veces que quieras para volver a un estado limpio y conocido.
 
@@ -90,7 +90,7 @@ academias/clubes reales hace falta pasar a **Pro**.
 app/
   (auth)/        login, registro
   onboarding/    configuración inicial obligatoria del negocio
-  (app)/         rutas protegidas: dashboard, alumnos, profesores, actividades, horarios, ajustes
+  (app)/         rutas protegidas: dashboard, alumnos, instructores, actividades, horarios, ajustes
 components/
   ui/            primitivos visuales (Button, Input, Card, Badge, ...)
   layout/        sidebar, bottom nav, topbar

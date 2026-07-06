@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireOnboardedSession } from "@/lib/auth/guard";
 import { connectDB } from "@/lib/db/connect";
-import { Activity, Enrollment, Schedule, TeacherActivity } from "@/models";
+import { Activity, Enrollment, InstructorActivity, Schedule } from "@/models";
 import { setActivityStatusAction, updateActivityAction } from "@/app/(app)/activities/actions";
 import {
   deleteScheduleAction,
@@ -29,16 +29,16 @@ export default async function ActivityDetailPage({ params }: { params: Promise<{
   const activity = await Activity.findOne({ _id: id, businessId: session.businessId }).lean();
   if (!activity) notFound();
 
-  const [schedules, enrollments, teacherLinks] = await Promise.all([
+  const [schedules, enrollments, instructorLinks] = await Promise.all([
     Schedule.find({ businessId: session.businessId, activityId: id })
       .sort({ startTime: 1 })
-      .populate("teacherId", "firstName lastName")
+      .populate("instructorId", "firstName lastName")
       .lean(),
     Enrollment.find({ businessId: session.businessId, activityId: id, status: "active" })
       .populate("studentId", "firstName lastName")
       .lean(),
-    TeacherActivity.find({ businessId: session.businessId, activityId: id })
-      .populate("teacherId", "firstName lastName")
+    InstructorActivity.find({ businessId: session.businessId, activityId: id })
+      .populate("instructorId", "firstName lastName")
       .lean(),
   ]);
 
@@ -50,8 +50,8 @@ export default async function ActivityDetailPage({ params }: { params: Promise<{
     .filter((s): s is { _id: unknown; firstName: string; lastName: string } => Boolean(s))
     .map((s) => ({ _id: String(s._id), label: `${s.firstName} ${s.lastName}` }));
 
-  const teacherItems = teacherLinks
-    .map((t) => t.teacherId as unknown as { _id: unknown; firstName: string; lastName: string } | null)
+  const instructorItems = instructorLinks
+    .map((t) => t.instructorId as unknown as { _id: unknown; firstName: string; lastName: string } | null)
     .filter((t): t is { _id: unknown; firstName: string; lastName: string } => Boolean(t))
     .map((t) => ({ _id: String(t._id), label: `${t.firstName} ${t.lastName}` }));
 
@@ -91,7 +91,7 @@ export default async function ActivityDetailPage({ params }: { params: Promise<{
         ) : (
           <div className="flex flex-col gap-2">
             {schedules.map((schedule) => {
-              const teacherDoc = schedule.teacherId as unknown as
+              const instructorDoc = schedule.instructorId as unknown as
                 | { firstName?: string; lastName?: string }
                 | null;
               const boundScheduleToggle = toggleScheduleStatusAction.bind(null, id, String(schedule._id));
@@ -106,7 +106,7 @@ export default async function ActivityDetailPage({ params }: { params: Promise<{
                       <p className="text-xs text-slate-500">
                         {(schedule.daysOfWeek as DayOfWeek[]).map((d) => DAY_LABELS_SHORT[d]).join(", ")}
                         {schedule.location ? ` · ${schedule.location}` : ""}
-                        {teacherDoc ? ` · ${teacherDoc.firstName} ${teacherDoc.lastName}` : ""}
+                        {instructorDoc ? ` · ${instructorDoc.firstName} ${instructorDoc.lastName}` : ""}
                       </p>
                     </div>
                     <Badge status={schedule.status as StatusValue} />
@@ -157,17 +157,17 @@ export default async function ActivityDetailPage({ params }: { params: Promise<{
 
       <section className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-slate-900">Profesores ({teacherItems.length})</h2>
-          <Link href={`/activities/${id}/teachers`}>
+          <h2 className="text-base font-semibold text-slate-900">Instructores ({instructorItems.length})</h2>
+          <Link href={`/activities/${id}/instructors`}>
             <Button size="sm" variant="secondary">
               Editar
             </Button>
           </Link>
         </div>
         <RosterPreview
-          items={teacherItems}
-          emptyLabel="Todavía no hay profesores asignados."
-          hrefBase="/teachers"
+          items={instructorItems}
+          emptyLabel="Todavía no hay instructores asignados."
+          hrefBase="/instructors"
         />
       </section>
     </div>
